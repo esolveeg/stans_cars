@@ -41,25 +41,26 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Color(0x44000000),
+        backgroundColor: Color(0xff000000),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              SizedBox(
-                height: (screenSize.height * 0.4) - 15,
-                child: Padding(
-                  padding: const EdgeInsets.all(1),
-                  child: Image.asset("assets/hights.png"),
-                ),
-              ),
-              Text(
-                "${MediaQuery.of(context).size.height}",
-                style: TextStyle(color: Colors.red),
-              ),
-              ImageController()
-            ],
-          ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // SizedBox(
+                //   height: (screenSize.height * 0.4) - 15,
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(1),
+                //     child: Image.asset("assets/hights.png"),
+                //   ),
+                // ),
+                // Text(
+                //   "${MediaQuery.of(context).size.height}",
+                //   style: TextStyle(color: Colors.red),
+                // ),
+                ImageController()
+              ],
+            ),
+          
         ),
         bottomNavigationBar: Container(
           height: 25,
@@ -77,6 +78,7 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
-        ));
+        )
+        );
   }
 }
