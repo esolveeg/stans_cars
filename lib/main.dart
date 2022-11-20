@@ -50,9 +50,11 @@ class _HomeState extends State<Home> {
                 //   height: (screenSize.height * 0.4) - 15,
                 //   child: Padding(
                 //     padding: const EdgeInsets.all(1),
-                //     child: Image.asset("assets/hights.png"),
+                //     child: Image.asset("assets/logo.png"),
                 //   ),
                 // ),
+                Image.asset("assets/logo.png" , height: 100,),
+                SizedBox(height:  30,),
                 // Text(
                 //   "${MediaQuery.of(context).size.height}",
                 //   style: TextStyle(color: Colors.red),

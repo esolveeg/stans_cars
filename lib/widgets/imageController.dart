@@ -1,138 +1,185 @@
 import 'package:flutter/material.dart';
 import 'package:stans_cars/widgets/btn.dart';
 
-class ImageController extends StatelessWidget {
+class ImageController extends StatefulWidget {
   const ImageController({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<ImageController> createState() => _ImageControllerState();
+}
+
+class _ImageControllerState extends State<ImageController> {
+  String baseImg = 'assets/home.png';
+  String imgUrl = 'assets/home.png';
+  bool isDisabled = false;
+
+  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (builderContext, constraints) {
-      Size imageSize = MediaQuery.of(builderContext).size;
-      Size screenSize = MediaQuery.of(context).size;
+      return SizedBox(
+          width: 400,
+          child: Stack(children: [
+            // SizedBox(
+            //   width: 350,
+            //   // height: 400,
+            //   // padding: const EdgeInsets.all(1),
+            //   child: Image.asset(imgUrl),
+            // ),
 
-      return SizedBox(width: 400, child: imageWidget(imageSize, screenSize));
+            Align(
+              alignment: Alignment.topCenter,
+              child: Image.asset(imgUrl),
+            ),
+            //all up
+            Expanded(
+              child: Row(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    // widthFactor: 1.1,
+                    child: Column(
+                      children: [
+                        sideBtn('assets/RearUp.png'),
+                        largeSpacer(),
+                        sideBtn('assets/RearDown.png'),
+                      ],
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    // widthFactor: 1.1,
+                    child: Column(
+                      children: [
+                        alllBtn('assets/AllUp.png'),
+                        tinySpacer(),
+                        presettBtn('assets/pr1.png'),
+                        presettBtn('assets/pr2.png'),
+                        largeSpacer(),
+                        presettBtn('assets/pr4.png'),
+                        presettBtn('assets/pr5.png'),
+                        tinySpacer(),
+                        alllBtn('assets/AllDown.png'),
+                      ],
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    // widthFactor: 1.1,
+                    child: Column(
+                      children: [
+                        sideBtn('assets/FrontUp.png'),
+                        largeSpacer(),
+                        sideBtn('assets/FrontDown.png'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]));
     });
   }
 
-  Stack imageWidget(Size imageSize, Size screenSize) {
-    double allBtnWidth = 120;
-    double allBtnHeihgt = 55;
-    double presetWidth = 180;
-    double presetHeihgt = 75;
-    double sideWidth = 100;
-    double sideHeihgt = 90;
-    double doubleTabBtnHeight = imageSize.height * 0.078;
-
-    double doubleTabLargeBtnHeight = imageSize.height * 0.1;
-    double doubleTabLargeBtnWidth = imageSize.width * 0.5;
-    var allBtn = SizedBox(width: allBtnWidth, height: allBtnHeihgt, child: AppBtn());
-    var presetBtn = SizedBox(width: presetWidth, height: presetHeihgt, child: AppBtn());
-    var sideBtn = SizedBox(width: sideWidth, height: sideHeihgt, child: AppBtn());
-    return Stack(children: [
-      // SizedBox(
-      //   width: 350,
-      //   // height: 400,
-      //   // padding: const EdgeInsets.all(1),
-      //   child: Image.asset("assets/home.png"),
-      // ),
-      Align(
-        alignment: Alignment.topCenter,
-        child: Image.asset("assets/home.png"),
-      ),
-      //all up
-      Expanded(
-        child: Row(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Align(
-              alignment: Alignment.topCenter,
-              // widthFactor: 1.1,
-              child: Column(
-                children: [
-                  sideBtn,
-                  SizedBox(
-                    height: 130,
-                  ),
-                  sideBtn,
-      
-                ],
-              ),
-            ),
-            Align(
-              alignment: Alignment.topCenter,
-              // widthFactor: 1.1,
-              child: Column(
-                children: [
-                  allBtn,
-                  SizedBox(
-                    height: 20,
-                  ),
-                  presetBtn,
-                  presetBtn,
-                  SizedBox(
-                    height: 110,
-                  ),
-                  presetBtn,
-                  presetBtn,
-                  allBtn,
-      
-                ],
-              ),
-            ),
-            Align(
-              alignment: Alignment.topCenter,
-              // widthFactor: 1.1,
-              child: Column(
-                children: [
-                  sideBtn,
-                  SizedBox(
-                    height: 130,
-                  ),
-                  sideBtn,
-      
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      //  Align(
-      //   alignment: Alignment.topCenter,
-      //   // widthFactor: 1.1,
-      //   child: SizedBox(
-      //         width: allBtnWidth,
-      //         height: allBtnHeihgt,
-      //     child: AppBtn(
-      //       top: allBtnHeihgt ,
-      //       )
-      //   ),
-      // ),
-      // // all down
-      // AppBtn(
-      //     bottom: 0,
-      //     right: imageSize.width - (imageSize.width * 0.68),
-      //     width: allBtnWidth,
-      //     height: allBtnWidth),
-      // // double tab preset 1
-      // AppBtn(
-      //     top: allBtnWidth,
-      //     right: imageSize.width - (imageSize.width * 0.68),
-      //     width: allBtnWidth,
-      //     height: doubleTabBtnHeight),
-      // // double tab preset 2
-      // AppBtn(
-      //     top: allBtnWidth + doubleTabBtnHeight,
-      //     right: imageSize.width - (imageSize.width * 0.68),
-      //     width: allBtnWidth,
-      //     height: doubleTabBtnHeight),
-      // // double tab preset 3
-      // AppBtn(
-      //     top: allBtnWidth + (doubleTabBtnHeight * 2),
-      //     right: imageSize.width - (imageSize.width * 0.68),
-      //     width: doubleTabLargeBtnWidth,
-      //     height: doubleTabLargeBtnHeight),
-    ]);
+  Widget presettBtn(String img) {
+    double sideWidth = 200;
+    double sideHeihgt = 80;
+    return SizedBox(
+        width: sideWidth,
+        height: sideHeihgt,
+        child: GestureDetector(
+          onDoubleTap: () async {
+            isDisabled = true;
+            setState(() {
+              imgUrl = baseImg;
+            });
+            for (var i = 0; i < 10; i++) {
+              print(i);
+              print('i');
+              await Future.delayed(const Duration(milliseconds: 500), () {
+                setState(() {
+                  imgUrl = i % 2 == 0 ? baseImg : img;
+                });
+              });
+            }
+            setState(() {
+              imgUrl = baseImg;
+            });
+            isDisabled = false;
+          },
+        ));
   }
+
+  Widget largeSpacer() {
+    return const SizedBox(
+      height: 80,
+    );
+  }
+
+  Widget tinySpacer() {
+    return const SizedBox(
+      height: 20,
+    );
+  }
+
+  Widget sideBtn(String img) {
+    double sideWidth = 90;
+    double sideHeihgt = 120;
+    return SizedBox(
+        width: sideWidth,
+        height: sideHeihgt,
+        child: GestureDetector(
+          onPanDown: (onPan) async {
+            if (isDisabled) return;
+            print('OnPan');
+
+            setState(() {
+              imgUrl = img;
+            });
+            // }
+            // _changeButtonColor();
+          },
+          onPanEnd: (end) async {
+            if (isDisabled) return;
+            print('OnPan end');
+
+            setState(() {
+              imgUrl = baseImg;
+            });
+            // print('canceled');
+          },
+        ));
+  }
+
+  Widget alllBtn(String img) {
+    double allWidth = 120;
+    double allHeihgt = 60;
+    return SizedBox(
+        width: allWidth,
+        height: allHeihgt,
+        child: GestureDetector(
+          onPanDown: (onPan) async {
+            if (isDisabled) return;
+            print('OnPan');
+
+            setState(() {
+              imgUrl = img;
+            });
+            // }
+            // _changeButtonColor();
+          },
+          onPanEnd: (end) async {
+            if (isDisabled) return;
+            print('OnPan end');
+
+            setState(() {
+              imgUrl = baseImg;
+            });
+            // print('canceled');
+          },
+        ));
+  }
+
 }

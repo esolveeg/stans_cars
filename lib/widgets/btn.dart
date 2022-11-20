@@ -9,6 +9,7 @@ class AppBtn extends StatelessWidget {
     this.bottom,
     this.width,
     this.height,
+    this.onPoressed,
   }) : super(key: key);
 
   final double? left;
@@ -17,6 +18,7 @@ class AppBtn extends StatelessWidget {
   final double? bottom;
   final double? width;
   final double? height;
+  final Function? onPoressed;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,6 @@ class AppBtn extends StatelessWidget {
         bottom: bottom,
         width: width,
         height: height,
-        child: ElevatedButton(onPressed: () {}, child: Text("asd")));
+        child: ElevatedButton(onPressed: () {}, child: Text("asd")) ,   );
   }
 }
