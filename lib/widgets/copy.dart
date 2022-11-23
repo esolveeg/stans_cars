@@ -11,12 +11,11 @@ class ImageController extends StatefulWidget {
 }
 
 class _ImageControllerState extends State<ImageController> {
-  Map<String , double> metrics = {
-    'screenSize' : 400,
-    'sideW' : 400,
-    'screenSize' : 400,
-    'screenSize' : 400,
-
+  Map<String , List<double>> metrics = {
+    'screenSize' : [400],
+    'sideBtnSize' : [90 , 120],
+    'allBtnSize' : [120 , 60],
+    'presetBtnSize' : [200 , 80],
   };
   Map<String, List<String>> keys = {
     'FrontUp': ['!B516', '!B507'],
@@ -34,7 +33,7 @@ class _ImageControllerState extends State<ImageController> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (builderContext, constraints) {
       return SizedBox(
-          width: metrics['screenSize'],
+          width: metrics['screenSize']!.first,
           child: Stack(children: [
             // SizedBox(
             //   width: 350,
@@ -51,7 +50,8 @@ class _ImageControllerState extends State<ImageController> {
               child: Image.asset(imgUrl),
             ),
             //all up
-           Row(
+            Expanded(
+              child: Row(
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Align(
@@ -95,7 +95,7 @@ class _ImageControllerState extends State<ImageController> {
                   ),
                 ],
               ),
-            
+            ),
           ]));
     });
   }
@@ -103,17 +103,18 @@ class _ImageControllerState extends State<ImageController> {
   Widget presettBtn(
     String img,
   ) {
-    double sideWidth = 200;
-    double sideHeihgt = 80;
+
     return SizedBox(
-        width: sideWidth,
-        height: sideHeihgt,
-        child:  GestureDetector(
+        width: metrics['presetBtnSize']![0],
+        height: metrics['presetBtnSize']![1],
+        child: Container(
+          color: Colors.red,
+          child: GestureDetector(
             onDoubleTap: () async {
               isDisabled = true;
-              // setState(() {
-              //   imgUrl = baseImg;
-              // });
+              setState(() {
+                imgUrl = baseImg;
+              });
               for (var i = 0; i < 10; i++) {
                 print(i);
                 print('i');
@@ -129,15 +130,13 @@ class _ImageControllerState extends State<ImageController> {
               isDisabled = false;
             },
           ),
-        );
+        ));
   }
 
   Widget sideBtn(String keyName) {
-    double sideWidth = 90;
-    double sideHeihgt = 120;
     return SizedBox(
-        width: sideWidth,
-        height: sideHeihgt,
+        width: metrics['sideBtnSize']![0],
+        height: metrics['sideBtnSize']![1],
         child: GestureDetector(
           onPanDown: (onPan) async {
             if (isDisabled) return;
@@ -163,12 +162,10 @@ class _ImageControllerState extends State<ImageController> {
   }
 
   Widget alllBtn(String keyName) {
-    double allWidth = 120;
-    double allHeihgt = 60;
-
+    
     return SizedBox(
-        width: allWidth,
-        height: allHeihgt,
+        width: metrics['allBtnSize']![0],
+        height: metrics['allBtnSize']![1],
         child: GestureDetector(
           onPanDown: (onPan) async {
             if (isDisabled) return;

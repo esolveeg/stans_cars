@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stans_cars/screens/home.dart';
 import 'package:stans_cars/widgets/imageController.dart';
 
 void main() {
@@ -18,69 +19,7 @@ class MyApp extends StatelessWidget {
           textTheme: const TextTheme(
             headline1: TextStyle(color: Colors.white),
           )),
-      home: const Home(),
+      home:  Home(),
     );
-  }
-}
-
-class Home extends StatefulWidget {
-  const Home({super.key});
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  int _counter = 0;
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-        backgroundColor: Color(0xff000000),
-        body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                // SizedBox(
-                //   height: (screenSize.height * 0.4) - 15,
-                //   child: Padding(
-                //     padding: const EdgeInsets.all(1),
-                //     child: Image.asset("assets/logo.png"),
-                //   ),
-                // ),
-                Image.asset("assets/logo.png" , height: 100,),
-                SizedBox(height:  30,),
-                // Text(
-                //   "${MediaQuery.of(context).size.height}",
-                //   style: TextStyle(color: Colors.red),
-                // ),
-                ImageController()
-              ],
-            ),
-          
-        ),
-        bottomNavigationBar: Container(
-          height: 25,
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
-                "connected",
-                style: TextStyle(color: Colors.white),
-              ),
-              Icon(
-                Icons.settings_outlined,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        )
-        );
   }
 }
