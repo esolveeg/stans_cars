@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:location_permissions/location_permissions.dart';
+import 'package:location/location.dart';
 import 'dart:io' show Platform;
 
 import 'package:stans_cars/utils/constants.dart';
@@ -36,6 +36,8 @@ class Uart {
   String _logTexts = "";
   List<String> receivedData = [];
   int _numberOfMessagesReceived = 0;
+  Location location =  Location();
+  bool? _serviceEnabled;
 
   Uart._internal();
 
@@ -73,10 +75,12 @@ class Uart {
   }
 
   Future startScan() async {
+    _serviceEnabled = await location.serviceEnabled();
     bool goForIt = false;
     PermissionStatus permission;
-    if (Platform.isAndroid) {
-      permission = await LocationPermissions().requestPermissions();
+    if (Platform.isAndroid&&!_serviceEnabled!) {
+      _serviceEnabled = await location.requestService();
+      permission =  await location.hasPermission();
       if (permission == PermissionStatus.granted) {
         goForIt = true;
       }
