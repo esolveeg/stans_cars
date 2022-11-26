@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stans_cars/widgets/btn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stans_cars/utils/uart.dart';
 
 class ImageController extends StatefulWidget {
   const ImageController({
@@ -11,6 +12,7 @@ class ImageController extends StatefulWidget {
 }
 
 class _ImageControllerState extends State<ImageController> {
+  final Uart uart = Uart.instance;
   Map<String , double> metrics = {
     'screenSize' : 400,
     'sideW' : 400,
@@ -19,12 +21,12 @@ class _ImageControllerState extends State<ImageController> {
 
   };
   Map<String, List<String>> keys = {
-    'FrontUp': ['!B516', '!B507'],
-    'FrontDown': ['!B615', '!B606'],
-    'RearUp': ['!B813', '!B804'],
-    'RearDown': ['!B714', '!B705'],
-    'AllUp': ['!B10;', '!B20;'],
-    'AllDown': ['!B309', '!B408']
+    'FrontUp': ['a', 'A'],
+    'FrontDown': ['b', 'B'],
+    'RearUp': ['c', 'C'],
+    'RearDown': ['d', 'D'],
+    'AllUp': ['e', 'E'],
+    'AllDown': ['f', 'F']
   };
   String baseImg = 'assets/home.png';
   String imgUrl = 'assets/home.png';
@@ -72,11 +74,11 @@ class _ImageControllerState extends State<ImageController> {
                       children: [
                         alllBtn('AllUp'),
                         tinySpacer(),
-                        presettBtn('assets/pr1.png'),
-                        presettBtn('assets/pr2.png'),
+                        presettBtn(0 , 'assets/pr1.png'),
+                        presettBtn(1 , 'assets/pr2.png'),
                         largeSpacer(),
-                        presettBtn('assets/pr4.png'),
-                        presettBtn('assets/pr5.png'),
+                        presettBtn(2, 'assets/pr4.png'),
+                        presettBtn(3, 'assets/pr5.png'),
                         tinySpacer(),
                         alllBtn('AllDown'),
                       ],
@@ -101,6 +103,7 @@ class _ImageControllerState extends State<ImageController> {
   }
 
   Widget presettBtn(
+    int index,
     String img,
   ) {
     double sideWidth = 200;
@@ -110,13 +113,19 @@ class _ImageControllerState extends State<ImageController> {
         height: sideHeihgt,
         child:  GestureDetector(
             onDoubleTap: () async {
+               var prefs = await SharedPreferences.getInstance();
               isDisabled = true;
               // setState(() {
               //   imgUrl = baseImg;
               // });
+              var preset = prefs.getStringList("presets")![index];
+              // uart.sendData("${preset[1]}");
+              //   await Future.delayed( Duration(milliseconds: int.parse(preset[0])), () {
+              //     uart.sendData("${preset[2]}");
+
+              //   }
+              // uart.sendData("${preset[1]}");
               for (var i = 0; i < 10; i++) {
-                print(i);
-                print('i');
                 await Future.delayed(const Duration(milliseconds: 250), () {
                   setState(() {
                     imgUrl = i % 2 == 0 ? baseImg : img;
@@ -143,6 +152,8 @@ class _ImageControllerState extends State<ImageController> {
             if (isDisabled) return;
             print('OnPan');
             print("send:${keys[keyName]![0]}");
+            uart.sendData(keys[keyName]![0]);
+
             setState(() {
               imgUrl = "assets/${keyName}.png";
             });
@@ -153,6 +164,7 @@ class _ImageControllerState extends State<ImageController> {
             if (isDisabled) return;
             print('OnPan end');
             print("send:${keys[keyName]![1]}");
+            uart.sendData(keys[keyName]![1]);
             setState(() {
               imgUrl =               imgUrl = baseImg;
 ;
@@ -174,6 +186,8 @@ class _ImageControllerState extends State<ImageController> {
             if (isDisabled) return;
             print('OnPan');
 print("send:${keys[keyName]![0]}");
+            uart.sendData(keys[keyName]![0]);
+
             setState(() {
               imgUrl = "assets/${keyName}.png";
             });
@@ -184,6 +198,7 @@ print("send:${keys[keyName]![0]}");
             if (isDisabled) return;
             print('OnPan end');
 print("send:${keys[keyName]![1]}");
+            uart.sendData(keys[keyName]![1]);
 
             setState(() {
               imgUrl = baseImg;
