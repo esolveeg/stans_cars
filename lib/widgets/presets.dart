@@ -27,13 +27,11 @@ class _PresetsState extends State<Presets> {
   bool loading = true;
   void initState() {
     super.initState();
-   
   }
 
   Widget presetFront(int index) {
     return Row(
       children: [
-    
         Text(
           "Front",
           style: TextStyle(
@@ -44,11 +42,10 @@ class _PresetsState extends State<Presets> {
           child: Slider(
             min: 0.0,
             max: 10.0,
-            value:  widget.presets[index].frontSeconds.toDouble(),
+            value: widget.presets[index].frontSeconds.toDouble(),
             onChanged: (value) {
               setState(() {
                 widget.presets[index].frontSeconds = value.toInt();
-                
               });
             },
           ),
@@ -66,10 +63,14 @@ class _PresetsState extends State<Presets> {
             iconSize: 30,
             onPressed: () {
               setState(() {
-                  widget.presets[index].frontDir =   widget.presets[index].frontDir == "u" ? "d" : "u";
+                widget.presets[index].frontDir =
+                    widget.presets[index].frontDir == "u" ? "d" : "u";
               });
             },
-            icon: Icon(widget.presets[index].frontDir == "u"  ?  Icons.arrow_circle_up : Icons.arrow_circle_down,
+            icon: Icon(
+              widget.presets[index].frontDir == "u"
+                  ? Icons.arrow_circle_up
+                  : Icons.arrow_circle_down,
               color: Colors.white,
             ))
       ],
@@ -89,7 +90,7 @@ class _PresetsState extends State<Presets> {
           child: Slider(
             min: 0.0,
             max: 10.0,
-            value:  widget.presets[index].rearSeconds.toDouble(),
+            value: widget.presets[index].rearSeconds.toDouble(),
             onChanged: (value) {
               setState(() {
                 widget.presets[index].rearSeconds = value.toInt();
@@ -106,20 +107,23 @@ class _PresetsState extends State<Presets> {
         const SizedBox(
           width: 10,
         ),
-       IconButton(
+        IconButton(
             iconSize: 30,
             onPressed: () {
               setState(() {
-                  widget.presets[index].rearDir =   widget.presets[index].rearDir == "u" ? "d" : "u";
+                widget.presets[index].rearDir =
+                    widget.presets[index].rearDir == "u" ? "d" : "u";
               });
             },
-            icon: Icon(widget.presets[index].rearDir == "u"  ?  Icons.arrow_circle_up : Icons.arrow_circle_down,
+            icon: Icon(
+              widget.presets[index].rearDir == "u"
+                  ? Icons.arrow_circle_up
+                  : Icons.arrow_circle_down,
               color: Colors.white,
             ))
       ],
     );
   }
-
 
   Widget preset(int index) {
     return Column(
@@ -135,46 +139,45 @@ class _PresetsState extends State<Presets> {
     );
   }
 
-
-
-
-  Widget currenState(){
-    if(!uart.connected){
-      return Expanded(child: Center(child: Text("please connect to your device" , style: TextStyle(color : Colors.white),),));
+  Widget currenState() {
+    if (!uart.connected) {
+      return Center(
+        child: Text(
+          "please connect to your device",
+          style: TextStyle(color: Colors.white),
+        ),
+      );
     }
     return Column(
-          children: [
-            preset(0),
-            preset(1),
-            preset(2),
-            preset(3),
-            Container(
-              width: double.infinity,
-              child: ElevatedButton(
-                  onPressed: () async {
-                    prefs.savePresets(widget.presets);
-                    Fluttertoast.showToast(
-                      msg: "your prests saved succesfully",
-                      toastLength: Toast.LENGTH_SHORT,
-                      timeInSecForIosWeb: 4,
-                      textColor: Colors.white,
-                      backgroundColor: AppTheme.success,
-                    );
-                    Navigator.of(context).pushNamed("/home");
-                    
-                  },
-                  child: Text("save")),
-            )
-          ],
-        );
+      children: [
+        preset(0),
+        preset(1),
+        preset(2),
+        preset(3),
+        Container(
+          width: double.infinity,
+          child: ElevatedButton(
+              onPressed: () async {
+                prefs.savePresets(widget.presets);
+                Fluttertoast.showToast(
+                  msg: "your prests saved succesfully",
+                  toastLength: Toast.LENGTH_SHORT,
+                  timeInSecForIosWeb: 4,
+                  textColor: Colors.white,
+                  backgroundColor: AppTheme.success,
+                );
+                Navigator.of(context).pushNamed("/home");
+              },
+              child: Text("save")),
+        )
+      ],
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: currenState()
-      ),
+      child: Padding(padding: const EdgeInsets.all(20), child: currenState()),
     );
   }
 }

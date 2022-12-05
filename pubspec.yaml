@@ -14,7 +14,8 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   flutter_reactive_ble: ^5.0.2
-  location_permissions: ^3.0.0
+  # location_permissions: ^3.0.0
+  location: ^4.0.0-nullsafety.0
   fluttertoast: ^8.1.1
   shared_preferences: ^2.0.15
   input_slider: ^0.3.1
