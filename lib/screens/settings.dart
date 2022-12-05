@@ -63,7 +63,7 @@ class _SettingsState extends State<Settings> {
           );
           return;
         }
-        if(uart.receivedData.isEmpty){
+        if (uart.receivedData.isEmpty) {
           uart.sendData("getid");
           return;
         } else {
@@ -91,33 +91,30 @@ class _SettingsState extends State<Settings> {
       onRefresh: () async {
         scan();
       },
-      child: Expanded(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-                child: Text(
-              "There is no nearby devices",
-              style: Theme.of(context).textTheme.bodyText1,
-            )),
-            SizedBox(
-              height: 30,
-            ),
-            RoundedBtn(
-                onPressed: () {
-                  scan();
-                },
-                text: "reload",
-                width: 200)
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+              child: Text(
+            "There is no nearby devices",
+            style: Theme.of(context).textTheme.bodyText1,
+          )),
+          SizedBox(
+            height: 30,
+          ),
+          RoundedBtn(
+              onPressed: () {
+                scan();
+              },
+              text: "reload",
+              width: 200)
+        ],
       ),
     );
   }
 
   Widget scaningState() {
-    return Expanded(
-        child: Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CircularProgressIndicator(),
@@ -128,7 +125,7 @@ class _SettingsState extends State<Settings> {
           style: Theme.of(context).textTheme.bodyText1,
         )),
       ],
-    ));
+    );
   }
 
   Widget devicesState() {
