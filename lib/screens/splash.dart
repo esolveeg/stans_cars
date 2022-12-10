@@ -22,7 +22,7 @@ class _SplashState extends State<Splash> {
   void initState() {
     var deviceInfo = widget.prefs.getDevice();
     var uart = widget.uart;
-    Timer(const Duration(seconds: 10), () async {
+    Timer(const Duration(seconds: 5), () async {
       widget.uart.stopScan();
       setState(() {
         scanning = false;
@@ -51,17 +51,18 @@ class _SplashState extends State<Splash> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CircularProgressIndicator(),
-          SizedBox(
-            height: 10,
-          ),
-          if (scanning) Text("scaning"),
-          if (connecting) Text("connecting"),
           Image.asset(
             "assets/splash.png",
             width: 200,
             height: 200,
           ),
+          SizedBox(
+            height: 10,
+          ),
+          CircularProgressIndicator(),
+
+          // if (scanning) Text("scaning"),
+          if (connecting) Text("connecting"),
         ],
       )),
     );

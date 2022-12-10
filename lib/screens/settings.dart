@@ -54,13 +54,14 @@ class _SettingsState extends State<Settings> {
     if (uart.connected) {
       if (uart.currentDevice == device) {
         if (uart.authinticated) {
-          Fluttertoast.showToast(
-            msg: "you already connected to this device",
-            toastLength: Toast.LENGTH_SHORT,
-            timeInSecForIosWeb: 4,
-            textColor: Colors.white,
-            backgroundColor: Color.fromARGB(255, 231, 16, 63),
-          );
+          // Fluttertoast.showToast(
+          //   msg: "you already connected to this device",
+          //   toastLength: Toast.LENGTH_SHORT,
+          //   timeInSecForIosWeb: 4,
+          //   textColor: Colors.white,
+          //   backgroundColor: Color.fromARGB(255, 231, 16, 63),
+          // );
+          uart.disconnect();
           return;
         }
         if (uart.receivedData.isEmpty) {
@@ -105,6 +106,8 @@ class _SettingsState extends State<Settings> {
           RoundedBtn(
               onPressed: () {
                 scan();
+                  // Navigator.of(context).pushNamed("/home");
+
               },
               text: "reload",
               width: 200)

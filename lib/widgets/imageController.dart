@@ -1,6 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stans_cars/data/models/presetModel.dart';
+import 'package:stans_cars/utils/prefs.dart';
 import 'package:stans_cars/utils/uart.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class ImageController extends StatefulWidget {
   const ImageController({
@@ -13,20 +18,18 @@ class ImageController extends StatefulWidget {
 
 class _ImageControllerState extends State<ImageController> {
   final Uart uart = Uart.instance;
-  Map<String , double> metrics = {
-    'screenSize' : 400,
-    'sideW' : 400,
-    'screenSize' : 400,
-    'screenSize' : 400,
-
+  bool active = false;
+  Map<String, double> metrics = {
+    'screenSize': 300,
+    'sideW': 300,
   };
   Map<String, List<String>> keys = {
     'FrontUp': ['a', 'A'],
-    'FrontDown': ['b', 'B'],
-    'RearUp': ['c', 'C'],
-    'RearDown': ['d', 'D'],
-    'AllUp': ['e', 'E'],
-    'AllDown': ['f', 'F']
+    'FrontDown': ['b', 'A'],
+    'RearUp': ['c', 'A'],
+    'RearDown': ['d', 'A'],
+    'AllUp': ['e', 'A'],
+    'AllDown': ['f', 'A']
   };
   String baseImg = 'assets/home.png';
   String imgUrl = 'assets/home.png';
@@ -34,176 +37,195 @@ class _ImageControllerState extends State<ImageController> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (builderContext, constraints) {
-      return SizedBox(
-          width: metrics['screenSize'],
-          child: Stack(children: [
-            // SizedBox(
-            //   width: 350,
-            //   // height: 400,
-            //   // padding: const EdgeInsets.all(1),
-            //   child: Image.asset(imgUrl),
-            // ),
-            for ( var i in keys.keys ) Align(
-              alignment: Alignment.topCenter,
-              child: Image.asset('assets/$i.png'),
-            ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Image.asset(imgUrl),
-            ),
-            //all up
-           Row(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    // widthFactor: 1.1,
-                    child: Column(
-                      children: [
-                        sideBtn('RearUp'),
-                        largeSpacer(),
-                        sideBtn('RearDown'),
-                      ],
-                    ),
+    return SizedBox(
+        height: 450,
+        width: 350,
+        child: Stack(
+            alignment: Alignment.bottomCenter,
+            fit: StackFit.passthrough,
+            children: [
+              for (var i in keys.keys)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Image.asset(
+                    'assets/$i.png',
                   ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    // widthFactor: 1.1,
-                    child: Column(
-                      children: [
-                        alllBtn('AllUp'),
-                        tinySpacer(),
-                        presettBtn(0 , 'assets/pr1.png'),
-                        presettBtn(1 , 'assets/pr2.png'),
-                        largeSpacer(),
-                        presettBtn(2, 'assets/pr4.png'),
-                        presettBtn(3, 'assets/pr5.png'),
-                        tinySpacer(),
-                        alllBtn('AllDown'),
-                      ],
-                    ),
+                ),
+              for (var i = 1; i <= 4 ; i++) 
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Image.asset(
+                    'assets/pr$i.png',
                   ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    // widthFactor: 1.1,
-                    child: Column(
-                      children: [
-                        sideBtn('FrontUp'),
-                        largeSpacer(),
-                        sideBtn('FrontDown'),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Image.asset(
+                  imgUrl,
+                ),
               ),
-            
-          ]));
-    });
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(width: 105, height: 100),
+                        SizedBox(
+                            width: 105, height: 95, child: sideBtn('RearUp')),
+                        SizedBox(width: 105, height: 70),
+                        SizedBox(
+                            width: 105, height: 95, child: sideBtn('RearDown')),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                            width: 145, height: 60, child: alllBtn('AllUp')),
+                        SizedBox(
+                            width: 145,
+                            height: 70,
+                            child: presettBtn(0, 'assets/pr1.png')),
+                        SizedBox(
+                            width: 145,
+                            height: 68,
+                            child: presettBtn(1, 'assets/pr2.png')),
+                        SizedBox(
+                          width: 145,
+                          height: 70,
+                        ),
+                        SizedBox(
+                            width: 145,
+                            height: 60,
+                            child: presettBtn(2, 'assets/pr4.png')),
+                        SizedBox(
+                            width: 145,
+                            height: 60,
+                            child: presettBtn(3, 'assets/pr5.png')),
+                        SizedBox(
+                            width: 145, height: 55, child: alllBtn('AllDown')),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(width: 105, height: 100),
+                        SizedBox(
+                            width: 105, height: 95, child: sideBtn('FrontUp')),
+                        SizedBox(width: 105, height: 70),
+                        SizedBox(
+                            width: 105,
+                            height: 95,
+                            child: sideBtn('FrontDown')),
+                      ],
+                    ),
+                  ],
+                ),
+              
+            ]));
   }
 
-  Widget presettBtn(
-    int index,
-    String img,
-  ) {
-    double sideWidth = 200;
-    double sideHeihgt = 80;
-    return SizedBox(
-        width: sideWidth,
-        height: sideHeihgt,
-        child:  GestureDetector(
-            onDoubleTap: () async {
-               var prefs = await SharedPreferences.getInstance();
-              isDisabled = true;
-              // setState(() {
-              //   imgUrl = baseImg;
-              // });
-              var preset = prefs.getStringList("presets")![index];
-              // uart.sendData("${preset[1]}");
-              //   await Future.delayed( Duration(milliseconds: int.parse(preset[0])), () {
-              //     uart.sendData("${preset[2]}");
+  Widget presettBtn(int index, String img) {
+    return Container(
+      decoration: BoxDecoration(
+          color: active ? Color.fromARGB(48, 255, 0, 0) : Colors.transparent,
+          border: Border.all(color: Colors.blueAccent)),
+      child: GestureDetector(
+        onDoubleTap: () async {
+          if(isDisabled) return;
+        isDisabled = true;
+          Prefs prefs = Prefs.instance;
 
-              //   }
-              // uart.sendData("${preset[1]}");
-              for (var i = 0; i < 10; i++) {
-                await Future.delayed(const Duration(milliseconds: 250), () {
-                  setState(() {
-                    imgUrl = i % 2 == 0 ? baseImg : img;
-                  });
+          PresetModel preset = prefs.getPreset(index);
+        //   setState(() {
+        //     imgUrl = baseImg;
+        //   });
+          String dataToSend = "1$index";
+
+          print("dataToSend");
+          print(dataToSend);
+          
+          await uart.sendData(dataToSend);
+          for (var i = 0; i < 4 * (preset.frontSeconds  + preset.rearSeconds); i++) {
+              await Future.delayed(const Duration(milliseconds: 250), () {
+                setState(() {
+                  imgUrl = i % 2 == 0 ? baseImg : img;
                 });
-              }
-              setState(() {
-                imgUrl = baseImg;
               });
-              isDisabled = false;
-            },
-          ),
-        );
+            }
+          isDisabled = false;
+          // while (!controller.flashing) {
+          //   print("loop");
+          //     setState(() {
+          //       imgUrl = img;
+          //     });
+          //   await Future.delayed(const Duration(milliseconds: 250), () {
+          //     setState(() {
+          //       imgUrl = baseImg;
+          //     });
+          //   });
+          // }
+          setState(() {
+            imgUrl = baseImg;
+          });
+          isDisabled = false;
+        },
+      ),
+    );
   }
 
   Widget sideBtn(String keyName) {
-    double sideWidth = 90;
-    double sideHeihgt = 120;
-    return SizedBox(
-        width: sideWidth,
-        height: sideHeihgt,
-        child: GestureDetector(
-          onPanDown: (onPan) async {
-            if (isDisabled) return;
-            print('OnPan');
-            print("send:${keys[keyName]![0]}");
-            uart.sendData(keys[keyName]![0]);
+    return Container(
+          decoration: BoxDecoration(
+              color:
+                  active ? Color.fromARGB(48, 255, 0, 0) : Colors.transparent,
+              border: Border.all(color: Colors.blueAccent)),
+          child: GestureDetector(
+            onPanDown: (onPan) async {
+              if (isDisabled) return;
+              isDisabled = true;
+              setState(() {
+                imgUrl = "assets/${keyName}.png";
+              });
+              await uart.sendData(keys[keyName]![0]);
+            },
+            onPanEnd: (end) async {
+              // if (isDisabled) return;
+              setState(() {
+                imgUrl = imgUrl = baseImg;
+              });
+              await uart.sendData(keys[keyName]![1]);
+              isDisabled = false;
+              // print('canceled');
+            },
 
-            setState(() {
-              imgUrl = "assets/${keyName}.png";
-            });
-            // }
-            // _changeButtonColor();
-          },
-          onPanEnd: (end) async {
-            if (isDisabled) return;
-            print('OnPan end');
-            print("send:${keys[keyName]![1]}");
-            uart.sendData(keys[keyName]![1]);
-            setState(() {
-              imgUrl =               imgUrl = baseImg;
-;
-            });
-            // print('canceled');
-          },
-        ));
+            child: Text(""),
+          )
+    );
   }
 
-  Widget alllBtn(String keyName) {
-    double allWidth = 120;
-    double allHeihgt = 60;
 
-    return SizedBox(
-        width: allWidth,
-        height: allHeihgt,
+
+
+  Widget alllBtn(String keyName) {
+    return Container(
+        decoration: BoxDecoration(
+            color: active ? Color.fromARGB(48, 255, 0, 0) : Colors.transparent,
+            border: Border.all(color: Colors.blueAccent)),
         child: GestureDetector(
           onPanDown: (onPan) async {
             if (isDisabled) return;
-            print('OnPan');
-print("send:${keys[keyName]![0]}");
-            uart.sendData(keys[keyName]![0]);
-
+            isDisabled = true;
             setState(() {
               imgUrl = "assets/${keyName}.png";
             });
-            // }
-            // _changeButtonColor();
+            await uart.sendData(keys[keyName]![0]);
           },
           onPanEnd: (end) async {
-            if (isDisabled) return;
-            print('OnPan end');
-print("send:${keys[keyName]![1]}");
-            uart.sendData(keys[keyName]![1]);
-
             setState(() {
               imgUrl = baseImg;
             });
-            // print('canceled');
+            await uart.sendData(keys[keyName]![1]);
+            isDisabled = false;
+            
           },
         ));
   }
@@ -220,3 +242,5 @@ Widget tinySpacer() {
     height: 20,
   );
 }
+
+

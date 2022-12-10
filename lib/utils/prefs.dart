@@ -38,6 +38,12 @@ class Prefs {
 
   List<PresetModel> getPresets() {
     List<PresetModel> presets = [];
+    var airOutPrest = PresetModel(
+          frontSeconds: 4,
+          rearSeconds: 4,
+          frontDir: 'd',
+          rearDir: 'd',
+        );
     var setting = prefs!.getString("presets");
     if (setting == null) {
       return [
@@ -59,18 +65,38 @@ class Prefs {
           frontDir: 'd',
           rearDir: 'd',
         ),
-        PresetModel(
-          frontSeconds: 0,
-          rearSeconds: 0,
-          frontDir: 'd',
-          rearDir: 'd',
-        )
+        airOutPrest
       ];
     }
     var decoded = jsonDecode(setting);
     decoded.forEach((preset) {
       presets.add(PresetModel.fromJson(preset));
     });
+
+    presets.add(airOutPrest);
+
     return presets;
+  }
+
+
+
+
+
+  PresetModel getPreset(index) {
+    List<PresetModel> presets = [];
+    var setting = prefs!.getString("presets");
+    if (setting == null) {
+      return PresetModel(
+          frontSeconds: 0,
+          rearSeconds: 0,
+          frontDir: 'd',
+          rearDir: 'd',
+        );
+    }
+    var decoded = jsonDecode(setting);
+    decoded.forEach((preset) {
+      presets.add(PresetModel.fromJson(preset));
+    });
+    return PresetModel.fromJson(decoded[index]);
   }
 }

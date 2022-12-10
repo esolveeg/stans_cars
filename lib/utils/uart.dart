@@ -7,14 +7,17 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:location/location.dart';
+import 'package:stans_cars/data/models/presetModel.dart';
 import 'dart:io' show Platform;
 
 import 'package:stans_cars/utils/constants.dart';
 import 'package:stans_cars/utils/prefs.dart';
+import 'package:stans_cars/widgets/imageController.dart';
 import 'package:stans_cars/widgets/rounded_btn.dart';
 
 class Uart {
   String result = "";
+  bool sendKillSwitch = false;
   static Uart? _instance;
   final Uuid _UART_UUID = Uuid.parse("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
   final Uuid _UART_RX = Uuid.parse("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
@@ -36,7 +39,7 @@ class Uart {
   String _logTexts = "";
   List<String> receivedData = [];
   int _numberOfMessagesReceived = 0;
-  Location location =  Location();
+  final Location location = Location();
   bool? _serviceEnabled;
 
   Uart._internal();
@@ -59,10 +62,10 @@ class Uart {
 
   DiscoveredDevice? getDevice(BuildContext context, String deviceId) {
     DiscoveredDevice? filteredDevice;
-    for(DiscoveredDevice device in foundBleUARTDevices){
-      if (deviceId == device.id){
-          filteredDevice = device;
-          break;
+    for (DiscoveredDevice device in foundBleUARTDevices) {
+      if (deviceId == device.id) {
+        filteredDevice = device;
+        break;
       }
     }
     if (filteredDevice == null) {
@@ -78,15 +81,17 @@ class Uart {
     _serviceEnabled = await location.serviceEnabled();
     bool goForIt = false;
     PermissionStatus permission;
-    if (Platform.isAndroid&&!_serviceEnabled!) {
-      _serviceEnabled = await location.requestService();
-      permission =  await location.hasPermission();
-      if (permission == PermissionStatus.granted) {
-        goForIt = true;
-      }
-    } else if (Platform.isIOS) {
+
+    _serviceEnabled = await location.requestService();
+    permission = await location.hasPermission();
+    print(PermissionStatus.values);
+    if (permission == PermissionStatus.granted) {
       goForIt = true;
+    } else {
+      print("ask for permission");
+      await location.requestPermission();
     }
+
     if (goForIt) {
       //TODO replace True with permission == PermissionStatus.granted is for IOS test
       foundBleUARTDevices = [];
@@ -101,20 +106,58 @@ class Uart {
       });
     } else {
       print("need permission");
+      await location.requestPermission();
+      await startScan();
     }
   }
 
   Future sendData(String data) async {
+    // if (data.contains(RegExp(r'[A-Z]'))) {
+    //     await flutterReactiveBle.writeCharacteristicWithResponse(
+    //           _rxCharacteristic!,
+    //           value: data.codeUnits);
+    //     // await Future.delayed(Duration(milliseconds: 500), () async {
+    //     //   await flutterReactiveBle.writeCharacteristicWithResponse(
+    //     //       _rxCharacteristic!,
+    //     //       value: data.codeUnits);
+    //     // });
+      
+    //   return;
+    // }
     await flutterReactiveBle.writeCharacteristicWithResponse(_rxCharacteristic!,
         value: data.codeUnits);
+    await Future.delayed(Duration(milliseconds: 30), (){});
+  }
+
+  Future savePersets() async {
+    Prefs prefs = Prefs.instance;
+    List<PresetModel> presets = prefs.getPresets();
+    for (var i = 0; i < presets.length; i++) {
+      var dataToSend =
+          "${i + 2}${presets[i].frontSeconds}${presets[i].frontDir}${presets[i].rearSeconds}${presets[i].rearDir}";
+      await Future.delayed(const Duration(milliseconds: 500), () async {});
+      await sendData(dataToSend);
+
+      print(dataToSend);
+    }
+    // presets.forEach((preset) async {
+    //   await Future.delayed(const Duration(milliseconds: 500), () async {
+
+    //     });
+    //   presetNo++;
+    // });
   }
 
   void _onNewReceivedData(BuildContext context, List<int> data) {
     var msg = String.fromCharCodes(data);
     if (receivedData.isEmpty) {
       receivedData.add(msg);
-      showAuthDialog(context, msg);
-      return;
+      if (msg.length == 6) {
+        showAuthDialog(context, msg);
+        return;
+      }  else {
+        savePersets();
+      }
     }
     if (receivedData.first != msg) {
       receivedData = [msg];
@@ -138,7 +181,7 @@ class Uart {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Color.fromARGB(31, 116, 113, 113),
+          backgroundColor: Color.fromARGB(255, 116, 113, 113),
           title: Text('Authentication'),
           content: TextField(
             controller: _deviceSerialInputController,
@@ -228,7 +271,8 @@ class Uart {
     );
   }
 
-  void onConnectDevice(BuildContext context, DiscoveredDevice device , {bool initialConnection = false}) {
+  void onConnectDevice(BuildContext context, DiscoveredDevice device,
+      {bool initialConnection = false}) {
     Prefs prefs = Prefs.instance;
     String? savedDevice = prefs.getDevice();
     _currentConnectionStream = flutterReactiveBle.connectToAdvertisingDevice(
@@ -247,7 +291,6 @@ class Uart {
           }
         case DeviceConnectionState.connected:
           {
-            print("connected from connected");
             connected = true;
             currentDevice = device;
             _logTexts = "${_logTexts}Connected to $id\n";
@@ -274,6 +317,7 @@ class Uart {
             if (savedDevice == null || savedDevice != device.id) {
               sendData("getid");
             } else {
+              savePersets();
               authinticated = true;
               connectToast();
               Navigator.of(context).pushReplacementNamed("/home");
@@ -296,7 +340,7 @@ class Uart {
           }
         case DeviceConnectionState.disconnected:
           {
-            if(initialConnection){
+            if (initialConnection) {
               onConnectDevice(context, device);
             } else {
               Fluttertoast.showToast(

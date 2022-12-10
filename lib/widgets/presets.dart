@@ -64,11 +64,11 @@ class _PresetsState extends State<Presets> {
             onPressed: () {
               setState(() {
                 widget.presets[index].frontDir =
-                    widget.presets[index].frontDir == "u" ? "d" : "u";
+                    widget.presets[index].frontDir == "1" ? "2" : "1";
               });
             },
             icon: Icon(
-              widget.presets[index].frontDir == "u"
+              widget.presets[index].frontDir == "1"
                   ? Icons.arrow_circle_up
                   : Icons.arrow_circle_down,
               color: Colors.white,
@@ -112,11 +112,11 @@ class _PresetsState extends State<Presets> {
             onPressed: () {
               setState(() {
                 widget.presets[index].rearDir =
-                    widget.presets[index].rearDir == "u" ? "d" : "u";
+                    widget.presets[index].rearDir == "1" ? "2" : "1";
               });
             },
             icon: Icon(
-              widget.presets[index].rearDir == "u"
+              widget.presets[index].rearDir == "1"
                   ? Icons.arrow_circle_up
                   : Icons.arrow_circle_down,
               color: Colors.white,
@@ -153,14 +153,16 @@ class _PresetsState extends State<Presets> {
         preset(0),
         preset(1),
         preset(2),
-        preset(3),
+        // preset(3),
         Container(
           width: double.infinity,
           child: ElevatedButton(
               onPressed: () async {
-                prefs.savePresets(widget.presets);
+                await prefs.savePresets(widget.presets);
+                await uart.savePersets();
+                // print("object");
                 Fluttertoast.showToast(
-                  msg: "your prests saved succesfully",
+                  msg: "Presets sent to manifold.",
                   toastLength: Toast.LENGTH_SHORT,
                   timeInSecForIosWeb: 4,
                   textColor: Colors.white,
