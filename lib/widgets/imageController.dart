@@ -127,7 +127,7 @@ class _ImageControllerState extends State<ImageController> {
     return Container(
       decoration: BoxDecoration(
           color: active ? Color.fromARGB(48, 255, 0, 0) : Colors.transparent,
-          border: Border.all(color: Colors.blueAccent)),
+         ),
       child: GestureDetector(
         onDoubleTap: () async {
           if(isDisabled) return;
@@ -177,7 +177,7 @@ class _ImageControllerState extends State<ImageController> {
           decoration: BoxDecoration(
               color:
                   active ? Color.fromARGB(48, 255, 0, 0) : Colors.transparent,
-              border: Border.all(color: Colors.blueAccent)),
+             ),
           child: GestureDetector(
             onPanDown: (onPan) async {
               if (isDisabled) return;
@@ -209,7 +209,7 @@ class _ImageControllerState extends State<ImageController> {
     return Container(
         decoration: BoxDecoration(
             color: active ? Color.fromARGB(48, 255, 0, 0) : Colors.transparent,
-            border: Border.all(color: Colors.blueAccent)),
+           ),
         child: GestureDetector(
           onPanDown: (onPan) async {
             if (isDisabled) return;
